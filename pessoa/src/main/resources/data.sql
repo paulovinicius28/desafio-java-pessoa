@@ -1,10 +1,10 @@
 CREATE TABLE tb_pessoa(
-   id_pessoa LONG not null,
-   nome varchar(50) not null,
-   idade Int,
-   peso Double(3,2),
+   id_pessoa INT NOT NULL,
+   nome VARCHAR(50) NOT NULL,
+   idade INT,
+   peso DECIMAL(5,2),
 
    PRIMARY KEY(id_pessoa)
 );
 
-insert into tb_pessoa(id_pessoa, nome, idade, peso) VALUES (1, 'Paulo Vinicius', 29, 86.94);
+INSERT INTO tb_pessoa(id_pessoa, nome, idade, peso) VALUES (1, 'Paulo Vinicius', 29, 86.94);
