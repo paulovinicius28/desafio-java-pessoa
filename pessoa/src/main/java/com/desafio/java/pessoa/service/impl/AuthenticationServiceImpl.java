@@ -30,7 +30,7 @@ import jakarta.validation.Valid;
 @Service
 public class AuthenticationServiceImpl implements AuthenticationService {
 
-	private static final Integer JWT_EXPIRES_IN_SECONDS = 10;
+	private static final Integer JWT_EXPIRES_IN_SECONDS = 3600;
 
 	@Value("${app.jwt.secret-key}")
 	private String secretKey;

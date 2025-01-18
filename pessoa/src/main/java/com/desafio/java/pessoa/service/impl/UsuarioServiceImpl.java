@@ -1,6 +1,7 @@
 package com.desafio.java.pessoa.service.impl;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -14,6 +15,8 @@ import org.springframework.stereotype.Service;
 import com.desafio.java.pessoa.entities.Usuario;
 import com.desafio.java.pessoa.exception.HttpException;
 import com.desafio.java.pessoa.model.UsuarioDTO;
+import com.desafio.java.pessoa.model.UsuarioSaveDTO;
+import com.desafio.java.pessoa.model.UsuarioUpdateDTO;
 import com.desafio.java.pessoa.repositories.UsuarioRepository;
 import com.desafio.java.pessoa.service.UsuarioService;
 
@@ -50,6 +53,47 @@ public class UsuarioServiceImpl implements UsuarioService {
 
 	private UsuarioDTO map(Usuario entity) {
 		return UsuarioDTO.builder().id(entity.getId()).nome(entity.getNome()).email(entity.getEmail()).build();
+	}
+
+	@Override
+	public Usuario save(UsuarioSaveDTO usuario) {
+		return this.repository.save(new Usuario(
+				usuario.getNome(),
+				usuario.getEmail(),
+				passwordEncoder.encode(usuario.getSenha())));
+	}
+
+	@Override
+	public void update(Long id, UsuarioUpdateDTO usuarioUpdateDTO) {
+
+		Usuario retornoUsuarioBanco = this.repository.findById(id).orElseThrow(() -> new HttpException("Usuário " +  " não encontrado", HttpStatus.NOT_FOUND));
+
+		var usuarioBanco = retornoUsuarioBanco; 
+
+		if (usuarioUpdateDTO.getNome() != null && !usuarioUpdateDTO.getNome().isEmpty()) {
+			usuarioBanco.setNome(usuarioUpdateDTO.getNome());
+		}
+
+		if (usuarioUpdateDTO.getEmail() != null && !usuarioUpdateDTO.getEmail().isEmpty()) {
+			usuarioBanco.setEmail(usuarioUpdateDTO.getEmail());
+		}
+
+
+		if (usuarioUpdateDTO.getSenha() != null && !usuarioUpdateDTO.getSenha().isEmpty()) {
+			usuarioBanco.setSenha(usuarioUpdateDTO.getSenha());
+		}
+		
+		this.repository.save(usuarioBanco);
+
+
+	}
+
+	@Override
+	public void delete(Long id) {
+		Usuario retornoUsuarioBanco = this.repository.findById(id).orElseThrow(() -> new HttpException("Usuário " +  " não encontrado", HttpStatus.NOT_FOUND));
+
+		this.repository.delete(retornoUsuarioBanco);
+
 	}
 
 }

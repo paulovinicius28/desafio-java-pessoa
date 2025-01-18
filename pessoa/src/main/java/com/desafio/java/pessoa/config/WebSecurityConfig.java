@@ -35,8 +35,11 @@ public class WebSecurityConfig {
 				.sessionManagement(customizer -> customizer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 				.authorizeHttpRequests(customizer -> customizer
 						.requestMatchers(new AntPathRequestMatcher("/login", HttpMethod.POST.name())).permitAll()
+						.requestMatchers(new AntPathRequestMatcher("/h2-console/**")).permitAll()
 						.anyRequest().authenticated())
-				.addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class).build();
+				.addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class)
+				.headers(customizer -> customizer.frameOptions(frame -> frame.sameOrigin()))
+				.build();
 	}
 
 	@Bean
