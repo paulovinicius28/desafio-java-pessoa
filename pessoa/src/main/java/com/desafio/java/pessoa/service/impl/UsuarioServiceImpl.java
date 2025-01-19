@@ -1,7 +1,6 @@
 package com.desafio.java.pessoa.service.impl;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -68,23 +67,19 @@ public class UsuarioServiceImpl implements UsuarioService {
 
 		Usuario retornoUsuarioBanco = this.repository.findById(id).orElseThrow(() -> new HttpException("Usuário " +  " não encontrado", HttpStatus.NOT_FOUND));
 
-		var usuarioBanco = retornoUsuarioBanco; 
-
 		if (usuarioUpdateDTO.getNome() != null && !usuarioUpdateDTO.getNome().isEmpty()) {
-			usuarioBanco.setNome(usuarioUpdateDTO.getNome());
+			retornoUsuarioBanco.setNome(usuarioUpdateDTO.getNome());
 		}
 
 		if (usuarioUpdateDTO.getEmail() != null && !usuarioUpdateDTO.getEmail().isEmpty()) {
-			usuarioBanco.setEmail(usuarioUpdateDTO.getEmail());
+			retornoUsuarioBanco.setEmail(usuarioUpdateDTO.getEmail());
 		}
-
 
 		if (usuarioUpdateDTO.getSenha() != null && !usuarioUpdateDTO.getSenha().isEmpty()) {
-			usuarioBanco.setSenha(usuarioUpdateDTO.getSenha());
+			retornoUsuarioBanco.setSenha(passwordEncoder.encode(usuarioUpdateDTO.getSenha()));
 		}
 		
-		this.repository.save(usuarioBanco);
-
+		this.repository.save(retornoUsuarioBanco);
 
 	}
 

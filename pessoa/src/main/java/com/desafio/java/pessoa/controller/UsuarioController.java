@@ -5,6 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.desafio.java.pessoa.converter.UsuarioDTOConverter;
@@ -40,6 +42,7 @@ public class UsuarioController {
 	}
 
 	@PostMapping
+	@ResponseStatus(code = HttpStatus.CREATED)
 	public UsuarioDTO save(@RequestBody UsuarioSaveDTO usuarioSaveDTO) {
 		Usuario usuarioSalvo =  this.service.save(usuarioSaveDTO);
 
@@ -48,6 +51,7 @@ public class UsuarioController {
 	}
 
 	@PutMapping("/{id}")
+	@ResponseStatus(code = HttpStatus.NO_CONTENT)
 	public void update(@PathVariable("id") Long id,
 			@RequestBody UsuarioUpdateDTO usuarioUpdateDTO) {
 
@@ -58,6 +62,7 @@ public class UsuarioController {
 	}
 
 	@DeleteMapping("/{id}")
+	@ResponseStatus(code = HttpStatus.NO_CONTENT)
 	public void delete(@PathVariable Long id) {
 		this.service.delete(id);
 
