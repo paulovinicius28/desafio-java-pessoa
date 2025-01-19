@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -43,11 +44,15 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
 	@Override
 	public AuthenticationResponse auth(@Valid AuthenticationRequest request) {
-		Authentication authentication = this.manager.authenticate(
-				new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword(), new ArrayList<>()));
-		Usuario usuario = (Usuario) authentication.getPrincipal();
-		SecurityContextHolder.getContext().setAuthentication(authentication);
-		return AuthenticationResponse.builder().nome(usuario.getNome()).token(this.createToken(usuario)).build();
+		try {
+			Authentication authentication = this.manager.authenticate(
+					new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword(), new ArrayList<>()));
+			Usuario usuario = (Usuario) authentication.getPrincipal();
+			SecurityContextHolder.getContext().setAuthentication(authentication);
+			return AuthenticationResponse.builder().nome(usuario.getNome()).token(this.createToken(usuario)).build();
+		}catch (BadCredentialsException e) {
+			throw new HttpException("Usuário ou senha inválidos", HttpStatus.UNAUTHORIZED);
+		}
 	}
 
 	@SuppressWarnings("unchecked")

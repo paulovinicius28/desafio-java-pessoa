@@ -36,6 +36,7 @@ public class WebSecurityConfig {
 				.authorizeHttpRequests(customizer -> customizer
 						.requestMatchers(new AntPathRequestMatcher("/login", HttpMethod.POST.name())).permitAll()
 						.requestMatchers(new AntPathRequestMatcher("/h2-console/**")).permitAll()
+						.requestMatchers("/swagger-ui.html", "/swagger-ui/**", "/swagger-resources/**", "/swagger-resources", "/v3/api-docs/**", "/proxy/**").permitAll()
 						.anyRequest().authenticated())
 				.addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class)
 				.headers(customizer -> customizer.frameOptions(frame -> frame.sameOrigin()))
