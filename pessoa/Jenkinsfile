@@ -1,0 +1,51 @@
+pipeline {
+    agent any
+    
+    environment {
+        MAVEN_HOME = tool name: 'Maven 3', type: 'ToolLocation'
+    }
+    
+    stages {
+        stage('Checkout') {
+            steps {
+                git 'https://github.com/paulovinicius28/desafio-java-pessoa.git'
+            }
+        }
+        
+        stage('Build') {
+            steps {
+                script {
+                    // Compilando o projeto com Maven
+                    sh "'${MAVEN_HOME}/bin/mvn' clean install"
+                }
+            }
+        }
+        
+        stage('Test') {
+            steps {
+                script {
+                    // Rodando os testes (se necessário)
+                    sh "'${MAVEN_HOME}/bin/mvn' test"
+                }
+            }
+        }
+        
+        stage('Package') {
+            steps {
+                script {
+                    // Empacotando o projeto em um JAR executável
+                    sh "'${MAVEN_HOME}/bin/mvn' spring-boot:repackage"
+                }
+            }
+        }
+        
+        stage('Deploy') {
+            steps {
+                script {
+                    // Executando o JAR (exemplo de deploy em EC2 ou Docker)
+                    sh 'java -jar target/pessoa.jar'
+                }
+            }
+        }
+    }
+}
